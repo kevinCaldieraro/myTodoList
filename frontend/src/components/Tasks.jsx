@@ -80,12 +80,28 @@ const Tasks = () => {
     const { id, value } = e.target;
     const task = tasks.find(task => task.id === Number(id));
 
-    await fetch(`http://localhost:3000/tasks/${task.id}`, {
+    await fetch(`http://localhost:3000/tasks/${id}`, {
       method: 'put',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ title: task.title, status: value })
+    });
+
+    loadData();
+  };
+
+  const handleEdit = async e => {
+    e.preventDefault();
+    const { id, value } = e.target;
+    const task = tasks.find(task => task.id === Number(id));
+
+    await fetch(`http://localhost:3000/tasks/${id}`, {
+      method: 'put',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ title: value, status: task.status })
     });
 
     loadData();
@@ -99,7 +115,11 @@ const Tasks = () => {
       <TasksContainer>
         {tasks &&
           tasks.map(task => (
-            <TaskCard task={task} handleStatus={handleStatus} key={task.id} />
+            <TaskCard
+              task={task}
+              handlers={{ handleStatus, handleEdit }}
+              key={task.id}
+            />
           ))}
       </TasksContainer>
     </Container>

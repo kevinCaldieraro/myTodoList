@@ -14,6 +14,8 @@ const Container = styled.div`
 `;
 
 const TitleNtag = styled.div`
+  display: flex;
+  flex-direction: column;
   flex: 1;
 
   h3 {
@@ -46,15 +48,28 @@ const ActionButton = styled.button`
   border: none;
   border-radius: 5px;
   padding: 3px;
-  cursor: pointer;
-  transition: 0.5s;
 
-  &:hover {
+  &:enabled {
+    transition: 0.5s;
+    cursor: pointer;
+  }
+
+  &:enabled:hover {
     background-color: rgba(0, 0, 0, 0.1);
   }
 `;
 
-const TaskCard = ({ task, handleStatus }) => {
+const InputToEditTitle = styled.input`
+  font-size: 1.3rem;
+  font-weight: 500;
+  padding: 5px;
+  margin-bottom: 3px;
+`;
+
+const TaskCard = ({ task, handlers }) => {
+  const [editFormVisibility, setEditFormVisibility] = useState(false);
+  const [newTitle, setNewTitle] = useState(task.title);
+
   const borderColor = () => {
     if (task.status === 'pendente') {
       return '#e75959';
@@ -68,7 +83,23 @@ const TaskCard = ({ task, handleStatus }) => {
   return (
     <Container borderColor={borderColor}>
       <TitleNtag>
-        <h3>{task.title}</h3>
+        {editFormVisibility ? (
+          <InputToEditTitle
+            id={task.id}
+            type="text"
+            value={newTitle}
+            autoFocus
+            onChange={e => setNewTitle(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === 'Enter') {
+                handlers.handleEdit(e);
+                setEditFormVisibility(!editFormVisibility);
+              }
+            }}
+          />
+        ) : (
+          <h3>{task.title}</h3>
+        )}
         <span>{task.tag}</span>
       </TitleNtag>
       <Actions>
@@ -76,15 +107,18 @@ const TaskCard = ({ task, handleStatus }) => {
           id={task.id}
           name="status"
           value={task.status}
-          onChange={handleStatus}
+          onChange={handlers.handleStatus}
         >
           <option value="pendente">pendente</option>
           <option value="em andamento">em andamento</option>
           <option value="concluído">concluído</option>
         </Status>
         <div>
-          <ActionButton>
-            <FaEdit size={30} color="#4b7ec0" />
+          <ActionButton
+            disabled={editFormVisibility}
+            onClick={() => setEditFormVisibility(!editFormVisibility)}
+          >
+            <FaEdit size={30} color={editFormVisibility ? '#aaa' : '#4b7ec0'} />
           </ActionButton>
           <ActionButton>
             <FaTrashAlt size={30} color="#e64c4c" />
