@@ -2,7 +2,7 @@ import tasksTagsModel from '../models/tasksTagsModel';
 
 const getAllAssociationTasksTags = async (_req, res) => {
   const associations = await tasksTagsModel.getAllAssociationTasksTags();
-  return res.status.json(associations);
+  return res.status(200).json(associations);
 };
 
 const createAssociationTasksTags = async (req, res) => {

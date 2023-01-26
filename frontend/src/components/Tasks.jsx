@@ -1,12 +1,13 @@
-import React from 'react';
-import styles from 'styled-components';
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import TaskCard from './TaskCard';
 
-const Container = styles.div`
+const Container = styled.div`
   background-color: #dbdbdb;
   min-height: 100vh;
 `;
 
-const Header = styles.div`
+const Header = styled.div`
   background-color: #ac70dc;
   height: 70px;
   border-left: 1px solid #fff;
@@ -22,33 +23,84 @@ const Header = styles.div`
   }
 `;
 
-const TasksContainer = styles.div`
-  padding: 20px 60px;
+const TasksContainer = styled.div`
+  margin-top: 25px;
+  padding: 10px 20px;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
 `;
 
 const Tasks = () => {
+  const [tasks, setTasks] = useState();
+
+  const loadData = () => {
+    fetch('http://localhost:3000/tasks')
+      .then(response => response.json())
+      .then(allTasks => {
+        fetch('http://localhost:3000/tags')
+          .then(response => response.json())
+          .then(allTags => {
+            fetch('http://localhost:3000/associations')
+              .then(response => response.json())
+              .then(allAssociations => {
+                const builtTasks = allAssociations.map(
+                  ({ task_id, tag_id }) => {
+                    const task = allTasks.find(task => {
+                      if (task.id === task_id) return task;
+                    });
+
+                    const tag = allTags.find(tag => {
+                      if (tag.id === tag_id) return tag;
+                    });
+
+                    return {
+                      id: task.id,
+                      title: task.title,
+                      status: task.status,
+                      tag: tag.tag_name
+                    };
+                  }
+                );
+
+                setTasks(builtTasks);
+              });
+          });
+      });
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const handleStatus = async e => {
+    const { id, value } = e.target;
+    const task = tasks.find(task => task.id === Number(id));
+
+    await fetch(`http://localhost:3000/tasks/${task.id}`, {
+      method: 'put',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ title: task.title, status: value })
+    });
+
+    loadData();
+  };
+
   return (
     <Container>
       <Header>
         <h2>Tarefas</h2>
       </Header>
       <TasksContainer>
-        <p>task</p>
-        <p>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Totam vero
-          nihil sequi! Voluptatibus ullam rem molestias quo deleniti dicta,
-          numquam quisquam iure iusto id possimus quas debitis veniam, totam
-          necessitatibus? Laudantium facilis quod corporis tempore saepe
-          inventore facere eius, maxime sapiente, adipisci rem alias ratione
-          veritatis pariatur minus? Voluptates, neque? Lorem, ipsum dolor sit
-          amet consectetur adipisicing elit. Enim animi sunt beatae velit.
-          Ducimus dicta officia unde animi fuga tempora minus? Maxime atque quas
-          tempora quam eius iusto officiis dolorem. Lorem, ipsum dolor sit amet
-          consectetur adipisicing elit. Voluptate, sunt. Earum officiis
-          quibusdam animi mollitia sed maiores, saepe cumque tempora iure.
-          Maiores blanditiis nulla iste nisi beatae impedit eligendi culpa.
-        </p>
-        <p>task</p>
+        {tasks &&
+          tasks.map(task => (
+            <TaskCard task={task} handleStatus={handleStatus} key={task.id} />
+          ))}
       </TasksContainer>
     </Container>
   );

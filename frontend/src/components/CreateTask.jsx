@@ -1,13 +1,14 @@
 import React from 'react';
-import styles from 'styled-components';
+import styled from 'styled-components';
 
-const Container = styles.div`
+const Container = styled.div`
   background-color: #f5f9fa;
 `;
 
-const Header = styles.div`
+const Header = styled.div`
   background-color: #ac70dc;
   height: 70px;
+  border-right: 1px solid #fff;
   padding: 5px 10px;
   display: flex;
   align-items: center;

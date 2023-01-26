@@ -1,9 +1,9 @@
 import './index.css';
 import CreateTask from './components/CreateTask';
 import Tasks from './components/Tasks';
-import styles from 'styled-components';
+import styled from 'styled-components';
 
-const Container = styles.div`
+const Container = styled.div`
   display: grid;
   grid-template-columns: 1fr 2fr;
 `;
