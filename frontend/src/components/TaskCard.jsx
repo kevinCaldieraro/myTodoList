@@ -19,7 +19,7 @@ const TitleNtag = styled.div`
   flex: 1;
 
   h3 {
-    font-size: 1.3rem;
+    font-size: 1.4rem;
     font-weight: 500;
   }
 
@@ -60,7 +60,7 @@ const ActionButton = styled.button`
 `;
 
 const InputToEditTitle = styled.input`
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   font-weight: 500;
   padding: 5px;
   margin-bottom: 3px;

@@ -13,7 +13,7 @@ const createAssociationTasksTags = async (taskId, tagId) => {
 };
 
 const deleteAssociationTasksTags = async taskId => {
-  const query = 'DELETE FROM tasks_tags WHERE task_id = taskId';
+  const query = 'DELETE FROM tasks_tags WHERE task_id = ?';
   await connection.execute(query, [taskId]);
 };
 
