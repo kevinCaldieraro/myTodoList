@@ -106,7 +106,6 @@ const CreateTask = ({ loadData }) => {
     });
     const { insertId } = await response.json();
 
-    // console.log(task.tagId);
     await fetch('http://localhost:3000/associations', {
       method: 'post',
       headers: {
