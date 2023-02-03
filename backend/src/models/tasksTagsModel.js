@@ -1,7 +1,14 @@
 import connection from './connection';
 
 const getAllAssociationTasksTags = async () => {
-  const query = 'SELECT * FROM tasks_tags';
+  const query = `
+    SELECT tt.task_id, tt.tag_id, tk.title, tk.status, tg.tag_name
+    FROM tasks_tags as tt
+    INNER JOIN tasks as tk
+    ON tt.task_id = tk.id
+    INNER JOIN tags as tg
+    ON tt.tag_id = tg.id;
+  `;
   const [associations] = await connection.execute(query);
 
   return associations;

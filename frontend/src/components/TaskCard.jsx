@@ -120,7 +120,7 @@ const TaskCard = ({ task, handlers }) => {
           >
             <FaEdit size={30} color={editFormVisibility ? '#aaa' : '#4b7ec0'} />
           </ActionButton>
-          <ActionButton>
+          <ActionButton onClick={() => handlers.handleDelete(task)}>
             <FaTrashAlt size={30} color="#e64c4c" />
           </ActionButton>
         </div>

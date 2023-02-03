@@ -70,6 +70,11 @@ const Tasks = ({ loadData, tasks }) => {
     loadData();
   };
 
+  const handleDelete = async task => {
+    await fetch(`http://localhost:3000/tasks/${task.id}`, { method: 'delete' });
+    loadData();
+  };
+
   return (
     <Container>
       <Header>
@@ -80,7 +85,7 @@ const Tasks = ({ loadData, tasks }) => {
           tasks.map(task => (
             <TaskCard
               task={task}
-              handlers={{ handleStatus, handleEdit }}
+              handlers={{ handleStatus, handleEdit, handleDelete }}
               key={task.id}
             />
           ))}

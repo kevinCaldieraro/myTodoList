@@ -75,7 +75,7 @@ const CreateTask = ({ loadData }) => {
   const [tags, setTags] = useState();
   const [task, setTask] = useState({
     title: '',
-    tag: '',
+    tag: 'tag',
     tagId: ''
   });
 
@@ -97,32 +97,22 @@ const CreateTask = ({ loadData }) => {
 
   const createTask = async e => {
     e.preventDefault();
-    const response = await fetch('http://localhost:3000/tasks', {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ title: task.title })
-    });
-    const { insertId } = await response.json();
 
-    await fetch('http://localhost:3000/associations', {
+    await fetch('http://localhost:3000/tasks', {
       method: 'post',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ taskId: insertId, tagId: task.tagId })
+      body: JSON.stringify({ title: task.title, tagId: task.tagId })
     });
 
     loadData();
 
     setTask({
       title: '',
-      tag: '',
-      tagId: ''
+      tag: tags[0].tag_name,
+      tagId: tags[0].id
     });
-
-    // console.log(insertId);
   };
 
   const checkTagId = tagName => {

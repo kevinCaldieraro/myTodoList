@@ -13,37 +13,20 @@ const App = () => {
   const [tasks, setTasks] = useState();
 
   const loadData = () => {
-    fetch('http://localhost:3000/tasks')
+    fetch('http://localhost:3000/associations')
       .then(response => response.json())
-      .then(allTasks => {
-        fetch('http://localhost:3000/tags')
-          .then(response => response.json())
-          .then(allTags => {
-            fetch('http://localhost:3000/associations')
-              .then(response => response.json())
-              .then(allAssociations => {
-                const builtTasks = allAssociations.map(
-                  ({ task_id, tag_id }) => {
-                    const task = allTasks.find(task => {
-                      if (task.id === task_id) return task;
-                    });
+      .then(associations => {
+        const builtTasks = associations.map(association => {
+          return {
+            id: association.task_id,
+            tagId: association.tag_id,
+            title: association.title,
+            status: association.status,
+            tag: association.tag_name
+          };
+        });
 
-                    const tag = allTags.find(tag => {
-                      if (tag.id === tag_id) return tag;
-                    });
-
-                    return {
-                      id: task.id,
-                      title: task.title,
-                      status: task.status,
-                      tag: tag.tag_name
-                    };
-                  }
-                );
-
-                setTasks(builtTasks);
-              });
-          });
+        setTasks(builtTasks);
       });
   };
 
