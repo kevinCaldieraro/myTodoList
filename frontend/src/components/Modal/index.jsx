@@ -2,14 +2,17 @@ import React from 'react';
 import './style.css';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export const Modal = ({ modal, setModal, children }) => {
+export const Modal = ({ modal, setModal, setInputTag, children }) => {
   return (
     <AnimatePresence>
       {modal && (
         <>
           <motion.div
             className="fade"
-            onClick={() => setModal(false)}
+            onClick={() => {
+              setModal(false);
+              setInputTag('');
+            }}
             initial={{ opacity: 0 }}
             animate={{
               opacity: 1,

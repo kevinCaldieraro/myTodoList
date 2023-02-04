@@ -98,6 +98,7 @@ const Button = styled.button`
 
 const CreateTask = ({ loadData }) => {
   const [createdTag, setCreatedTag] = useState(false);
+  const [inputTag, setInputTag] = useState('');
   const [modal, setModal] = useState(false);
   const [tags, setTags] = useState();
   const [task, setTask] = useState({
@@ -149,10 +150,20 @@ const CreateTask = ({ loadData }) => {
 
   const createTag = async () => {
     console.log('tag criada');
+
+    await fetch('http://localhost:3000/tags', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ tagName: inputTag })
+    });
+
     setCreatedTag(true);
     setTimeout(() => {
       setModal(false);
       setCreatedTag(false);
+      setInputTag('');
     }, 800);
     loadTags();
   };
@@ -204,13 +215,16 @@ const CreateTask = ({ loadData }) => {
         </Button>
       </Form>
 
-      <Modal modal={modal} setModal={setModal}>
+      <Modal modal={modal} setModal={setModal} setInputTag={setInputTag}>
         <header className="modalHeader">
           <h2>Crie sua tag</h2>
           <Button
             className="closeModal"
             type="button"
-            onClick={() => setModal(false)}
+            onClick={() => {
+              setModal(false);
+              setInputTag('');
+            }}
           >
             X
           </Button>
@@ -223,6 +237,8 @@ const CreateTask = ({ loadData }) => {
               name=""
               id="tagName"
               placeholder="Estudo, Casa, ..."
+              value={inputTag}
+              onChange={e => setInputTag(e.target.value)}
             />
           </FormGroup>
           <Button className="createTag" type="button" onClick={createTag}>
