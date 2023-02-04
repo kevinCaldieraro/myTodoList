@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { Modal } from './Modal';
 
 const Container = styled.div`
   background-color: #f5f9fa;
@@ -55,7 +56,19 @@ const FormGroup = styled.div`
   }
 `;
 
-const SubmitButton = styled.button`
+const AddTagButton = styled.button`
+  background-color: transparent;
+  color: #0070d7;
+  font-size: 0.9rem;
+  font-weight: 500;
+  align-self: flex-start;
+  border: none;
+  margin-top: 1rem;
+  padding: 8px;
+  cursor: pointer;
+`;
+
+const Button = styled.button`
   background-color: #0070d7;
   color: #fff;
   padding: 10px;
@@ -69,9 +82,23 @@ const SubmitButton = styled.button`
     background-color: #f5f9fa;
     color: #0070d7;
   }
+
+  &.closeModal {
+    padding: 0 12px;
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+
+  &.createTag {
+    margin-top: 30px;
+    padding: 5px 10px;
+    font-size: 1.25rem;
+  }
 `;
 
 const CreateTask = ({ loadData }) => {
+  const [createdTag, setCreatedTag] = useState(false);
+  const [modal, setModal] = useState(false);
   const [tags, setTags] = useState();
   const [task, setTask] = useState({
     title: '',
@@ -120,6 +147,16 @@ const CreateTask = ({ loadData }) => {
     return tag.id;
   };
 
+  const createTag = async () => {
+    console.log('tag criada');
+    setCreatedTag(true);
+    setTimeout(() => {
+      setModal(false);
+      setCreatedTag(false);
+    }, 800);
+    loadTags();
+  };
+
   return (
     <Container>
       <Header>
@@ -158,11 +195,42 @@ const CreateTask = ({ loadData }) => {
                 </option>
               ))}
           </select>
+          <AddTagButton type="button" onClick={() => setModal(true)}>
+            + Adicionar nova tag
+          </AddTagButton>
         </FormGroup>
-        <SubmitButton type="submit" onClick={createTask}>
+        <Button type="submit" onClick={createTask}>
           Criar Tarefa
-        </SubmitButton>
+        </Button>
       </Form>
+
+      <Modal modal={modal} setModal={setModal}>
+        <header className="modalHeader">
+          <h2>Crie sua tag</h2>
+          <Button
+            className="closeModal"
+            type="button"
+            onClick={() => setModal(false)}
+          >
+            X
+          </Button>
+        </header>
+        <div className="modalBody">
+          <FormGroup>
+            <label htmlFor="tagName">Nome da tag</label>
+            <input
+              type="text"
+              name=""
+              id="tagName"
+              placeholder="Estudo, Casa, ..."
+            />
+          </FormGroup>
+          <Button className="createTag" type="button" onClick={createTag}>
+            Criar Tag
+          </Button>
+          {createdTag && <span>Tag criada!</span>}
+        </div>
+      </Modal>
     </Container>
   );
 };
