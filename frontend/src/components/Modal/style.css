@@ -25,10 +25,34 @@
 .modalHeader h2 {
   font-size: 1.6rem;
   font-weight: 500;
+  margin-right: 3rem;
 }
 
 .modalBody span {
   color: #5fbb35;
   font-weight: 600;
   margin-left: 1rem;
+}
+
+.modalBody .removeTags {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 10px 5px;
+}
+
+button.closeModal {
+  background-color: #e64c4c;
+  color: #fff;
+  border: 2px solid #e64c4c;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 0 12px;
+  font-size: 1.25rem;
+  font-weight: 500;
+  transition: 0.5s ease;
+}
+
+button.closeModal:hover {
+  background-color: #f5f9fa;
+  color: #e64c4c;
 }

@@ -50,15 +50,33 @@ const FormGroup = styled.div`
     border: none;
     border-radius: 5px;
   }
+`;
 
-  :nth-child(2) {
-    margin-bottom: 80px;
+const FormGroupRemoveTagModal = styled.div`
+  input,
+  label {
+    cursor: pointer;
+  }
+
+  input {
+    margin-right: 7px;
+    width: 20px;
+    height: 20px;
+  }
+
+  label {
+    font-size: 1.25rem;
   }
 `;
 
-const AddTagButton = styled.button`
+const TagButtons = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const TagButton = styled.button`
   background-color: transparent;
-  color: #0070d7;
+  color: ${props => props.color};
   font-size: 0.9rem;
   font-weight: 500;
   align-self: flex-start;
@@ -77,6 +95,7 @@ const Button = styled.button`
   cursor: pointer;
   font-size: 1.5rem;
   transition: 0.5s ease;
+  margin-top: 80px;
 
   &:hover {
     background-color: #f5f9fa;
@@ -84,12 +103,30 @@ const Button = styled.button`
   }
 
   &.closeModal {
+    background-color: #e64c4c;
+    border: 2px solid #e64c4c;
     padding: 0 12px;
     font-size: 1.25rem;
     font-weight: 500;
+
+    &:hover {
+      background-color: #f5f9fa;
+      color: #e64c4c;
+    }
   }
 
-  &.createTag {
+  &.removeTag {
+    background-color: #e64c4c;
+    border: 2px solid #e64c4c;
+
+    &:hover {
+      background-color: #f5f9fa;
+      color: #e64c4c;
+    }
+  }
+
+  &.createTag,
+  &.removeTag {
     margin-top: 30px;
     padding: 5px 10px;
     font-size: 1.25rem;
@@ -99,7 +136,10 @@ const Button = styled.button`
 const CreateTask = ({ loadData }) => {
   const [createdTag, setCreatedTag] = useState(false);
   const [inputTag, setInputTag] = useState('');
-  const [modal, setModal] = useState(false);
+  const [createTagModal, setCreateTagModal] = useState(false);
+  const [removedTags, setRemovedTags] = useState(false);
+  const [tagsToRemove, setTagsToRemove] = useState();
+  const [removeTagModal, setRemoveTagModal] = useState(false);
   const [tags, setTags] = useState();
   const [task, setTask] = useState({
     title: '',
@@ -117,6 +157,18 @@ const CreateTask = ({ loadData }) => {
       tag: tags[0].tag_name,
       tagId: tags[0].id
     });
+
+    const tagsToRemoveInitial = tags.reduce((tagsToRemove, tag) => {
+      return [
+        ...tagsToRemove,
+        {
+          id: tag.id,
+          isToRemove: false
+        }
+      ];
+    }, []);
+
+    setTagsToRemove(tagsToRemoveInitial);
   };
 
   useEffect(() => {
@@ -168,6 +220,21 @@ const CreateTask = ({ loadData }) => {
     loadTags();
   };
 
+  const removeTags = async () => {
+    const tagsToRmv = tagsToRemove.filter(tag => tag.isToRemove === true);
+    console.log(tagsToRmv);
+  };
+
+  const handleCheckedTagsToRemove = i => {
+    const newTagsToRemove = tagsToRemove.map((tag, index) =>
+      i === index
+        ? { ...tag, isToRemove: !tagsToRemove[index].isToRemove }
+        : { ...tag, isToRemove: tagsToRemove[index].isToRemove }
+    );
+
+    setTagsToRemove(newTagsToRemove);
+  };
+
   return (
     <Container>
       <Header>
@@ -206,29 +273,35 @@ const CreateTask = ({ loadData }) => {
                 </option>
               ))}
           </select>
-          <AddTagButton type="button" onClick={() => setModal(true)}>
-            + Adicionar nova tag
-          </AddTagButton>
         </FormGroup>
+        <TagButtons>
+          <TagButton
+            type="button"
+            onClick={() => setCreateTagModal(true)}
+            color="#0070d7"
+          >
+            + Adicionar nova tag
+          </TagButton>
+          <TagButton
+            type="button"
+            onClick={() => setRemoveTagModal(true)}
+            color="#e64c4c"
+          >
+            - Remover tag
+          </TagButton>
+        </TagButtons>
         <Button type="submit" onClick={createTask}>
           Criar Tarefa
         </Button>
       </Form>
 
-      <Modal modal={modal} setModal={setModal} setInputTag={setInputTag}>
-        <header className="modalHeader">
-          <h2>Crie sua tag</h2>
-          <Button
-            className="closeModal"
-            type="button"
-            onClick={() => {
-              setModal(false);
-              setInputTag('');
-            }}
-          >
-            X
-          </Button>
-        </header>
+      <Modal
+        type="createTag"
+        title="Crie sua tag"
+        modal={createTagModal}
+        setModal={setCreateTagModal}
+        setInputTag={setInputTag}
+      >
         <div className="modalBody">
           <FormGroup>
             <label htmlFor="tagName">Nome da tag</label>
@@ -245,6 +318,33 @@ const CreateTask = ({ loadData }) => {
             Criar Tag
           </Button>
           {createdTag && <span>Tag criada!</span>}
+        </div>
+      </Modal>
+      <Modal
+        type="removeTag"
+        title="Remova suas tags"
+        modal={removeTagModal}
+        setModal={setRemoveTagModal}
+      >
+        <div className="modalBody removeTags">
+          <div className="removeTags">
+            {tags &&
+              tags.map((tag, index) => (
+                <FormGroupRemoveTagModal key={tag.id}>
+                  <input
+                    type="checkbox"
+                    name={tag.tag_name}
+                    id={tag.id}
+                    checked={tagsToRemove[index].isToRemove}
+                    onChange={() => handleCheckedTagsToRemove(index)}
+                  />
+                  <label htmlFor={tag.id}>{tag.tag_name}</label>
+                </FormGroupRemoveTagModal>
+              ))}
+          </div>
+          <Button className="removeTag" type="button" onClick={removeTags}>
+            Remover
+          </Button>
         </div>
       </Modal>
     </Container>

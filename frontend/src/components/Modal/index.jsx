@@ -2,7 +2,14 @@ import React from 'react';
 import './style.css';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export const Modal = ({ modal, setModal, setInputTag, children }) => {
+export const Modal = ({
+  type,
+  title,
+  modal,
+  setModal,
+  setInputTag,
+  children
+}) => {
   return (
     <AnimatePresence>
       {modal && (
@@ -11,7 +18,9 @@ export const Modal = ({ modal, setModal, setInputTag, children }) => {
             className="fade"
             onClick={() => {
               setModal(false);
-              setInputTag('');
+              if (type === 'createTag') {
+                setInputTag('');
+              }
             }}
             initial={{ opacity: 0 }}
             animate={{
@@ -39,6 +48,21 @@ export const Modal = ({ modal, setModal, setInputTag, children }) => {
               }
             }}
           >
+            <header className="modalHeader">
+              <h2>{title}</h2>
+              <button
+                className="closeModal"
+                type="button"
+                onClick={() => {
+                  setModal(false);
+                  if (type === 'createTag') {
+                    setInputTag('');
+                  }
+                }}
+              >
+                X
+              </button>
+            </header>
             {children}
           </motion.div>
         </>
