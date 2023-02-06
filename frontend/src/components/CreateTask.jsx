@@ -133,7 +133,7 @@ const Button = styled.button`
   }
 `;
 
-const CreateTask = ({ loadData }) => {
+const CreateTask = ({ loadData, tasks }) => {
   const [createdTag, setCreatedTag] = useState(false);
   const [inputTag, setInputTag] = useState('');
   const [createTagModal, setCreateTagModal] = useState(false);
@@ -158,15 +158,17 @@ const CreateTask = ({ loadData }) => {
       tagId: tags[0].id
     });
 
-    const tagsToRemoveInitial = tags.reduce((tagsToRemove, tag) => {
-      return [
-        ...tagsToRemove,
-        {
-          id: tag.id,
-          isToRemove: false
-        }
-      ];
-    }, []);
+    const tagsToRemoveInitial = () => {
+      return tags.reduce((tagsToRemove, tag) => {
+        return [
+          ...tagsToRemove,
+          {
+            id: tag.id,
+            isToRemove: false
+          }
+        ];
+      }, []);
+    };
 
     setTagsToRemove(tagsToRemoveInitial);
   };
@@ -223,6 +225,7 @@ const CreateTask = ({ loadData }) => {
   const removeTags = async () => {
     const tagsToRmv = tagsToRemove.filter(tag => tag.isToRemove === true);
     console.log(tagsToRmv);
+    // console.log(tasks);
   };
 
   const handleCheckedTagsToRemove = i => {
@@ -325,6 +328,8 @@ const CreateTask = ({ loadData }) => {
         title="Remova suas tags"
         modal={removeTagModal}
         setModal={setRemoveTagModal}
+        setTagsToRemove={setTagsToRemove}
+        // tagsToRemoveInitial={tagsToRemoveInitial}
       >
         <div className="modalBody removeTags">
           <div className="removeTags">

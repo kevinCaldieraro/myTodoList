@@ -8,6 +8,8 @@ export const Modal = ({
   modal,
   setModal,
   setInputTag,
+  setTagsToRemove,
+  tagsToRemoveInitial,
   children
 }) => {
   return (
@@ -21,6 +23,9 @@ export const Modal = ({
               if (type === 'createTag') {
                 setInputTag('');
               }
+              // else {
+              //   setTagsToRemove(tagsToRemoveInitial);
+              // }
             }}
             initial={{ opacity: 0 }}
             animate={{
@@ -58,6 +63,9 @@ export const Modal = ({
                   if (type === 'createTag') {
                     setInputTag('');
                   }
+                  // else {
+                  //   setTagsToRemove(tagsToRemoveInitial);
+                  // }
                 }}
               >
                 X

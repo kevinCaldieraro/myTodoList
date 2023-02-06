@@ -32,7 +32,7 @@ const App = () => {
 
   return (
     <Container>
-      <CreateTask loadData={loadData} />
+      <CreateTask loadData={loadData} tasks={tasks} />
       <Tasks loadData={loadData} tasks={tasks} />
     </Container>
   );
