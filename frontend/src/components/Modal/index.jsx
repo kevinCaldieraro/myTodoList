@@ -7,9 +7,9 @@ export const Modal = ({
   title,
   modal,
   setModal,
+  tags,
   setInputTag,
   setTagsToRemove,
-  tagsToRemoveInitial,
   children
 }) => {
   return (
@@ -22,10 +22,18 @@ export const Modal = ({
               setModal(false);
               if (type === 'createTag') {
                 setInputTag('');
+              } else {
+                const tagsToRemoveInitial = tags.reduce((tagsToRemove, tag) => {
+                  return [
+                    ...tagsToRemove,
+                    {
+                      id: tag.id,
+                      isToRemove: false
+                    }
+                  ];
+                }, []);
+                setTagsToRemove(tagsToRemoveInitial);
               }
-              // else {
-              //   setTagsToRemove(tagsToRemoveInitial);
-              // }
             }}
             initial={{ opacity: 0 }}
             animate={{
@@ -62,10 +70,21 @@ export const Modal = ({
                   setModal(false);
                   if (type === 'createTag') {
                     setInputTag('');
+                  } else {
+                    const tagsToRemoveInitial = tags.reduce(
+                      (tagsToRemove, tag) => {
+                        return [
+                          ...tagsToRemove,
+                          {
+                            id: tag.id,
+                            isToRemove: false
+                          }
+                        ];
+                      },
+                      []
+                    );
+                    setTagsToRemove(tagsToRemoveInitial);
                   }
-                  // else {
-                  //   setTagsToRemove(tagsToRemoveInitial);
-                  // }
                 }}
               >
                 X

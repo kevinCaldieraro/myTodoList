@@ -158,17 +158,15 @@ const CreateTask = ({ loadData, tasks }) => {
       tagId: tags[0].id
     });
 
-    const tagsToRemoveInitial = () => {
-      return tags.reduce((tagsToRemove, tag) => {
-        return [
-          ...tagsToRemove,
-          {
-            id: tag.id,
-            isToRemove: false
-          }
-        ];
-      }, []);
-    };
+    const tagsToRemoveInitial = tags.reduce((tagsToRemove, tag) => {
+      return [
+        ...tagsToRemove,
+        {
+          id: tag.id,
+          isToRemove: false
+        }
+      ];
+    }, []);
 
     setTagsToRemove(tagsToRemoveInitial);
   };
@@ -329,7 +327,7 @@ const CreateTask = ({ loadData, tasks }) => {
         modal={removeTagModal}
         setModal={setRemoveTagModal}
         setTagsToRemove={setTagsToRemove}
-        // tagsToRemoveInitial={tagsToRemoveInitial}
+        tags={tags}
       >
         <div className="modalBody removeTags">
           <div className="removeTags">
