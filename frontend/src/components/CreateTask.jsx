@@ -213,7 +213,7 @@ const CreateTask = ({ loadData, tasks }) => {
 
     setCreatedTag(true);
     setTimeout(() => {
-      setModal(false);
+      setCreateTagModal(false);
       setCreatedTag(false);
       setInputTag('');
     }, 800);
